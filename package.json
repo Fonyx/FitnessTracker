@@ -12,8 +12,12 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "compression": "^1.7.4",
+    "dotenv": "^10.0.0",
+    "envalid": "^7.2.1",
     "express": "^4.16.3",
     "mongoose": "^5.3.16",
-    "morgan": "^1.9.1"
+    "morgan": "^1.9.1",
+    "winston": "^3.3.3"
   }
 }
