@@ -7,17 +7,22 @@ const controllers = require('./controllers');
 const Logger = require("./libs/logger");
 const configuredMorgan = require("./config/morgan");
 const mongoose = require('mongoose');
+const hbs = require('express-handlebars');
 
 
 const app = express();
-const PORT = process.env.PORT || 27017;
-const db_url = process.env.MONGODB_URL
+const PORT = process.env.PORT || 28017;
+const db_url = process.env.MONGODB_URL;
 
+
+// setup handlebars
+app.engine('hbs', hbs({layoutsDir: __dirname + '/views/layouts', extname: 'hbs'}));
+app.set('view engine', 'hbs');
 
 app.use(compression());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-app.use(express.static(path.join(__dirname, 'public')));
+app.use(express.static(path.join(__dirname, 'app/public')));
 
 // must tell app to use morgan middleware before importing the controllers
 app.use(configuredMorgan);
@@ -34,17 +39,11 @@ mongoose.connect(db_url, connectionParams)
     .then( () => {
         console.log('Connected to database ');
         app.listen(PORT, () => {
-          // tslint:disable-next-line:no-console
-          console.log('Server is running http://localhost:'+PORT);
-          Logger.error("This is an error log");
-          Logger.warn("This is a warn log");
-          Logger.info("This is a info log");
-          Logger.http("This is a http log");
-          Logger.debug("This is a debug log");
+          Logger.info('Server is running http://localhost:'+PORT);
         });
     })
     .catch( (err) => {
-        console.error(`Error connecting to the database. \n${err}`);
+        Logger.error(`Error connecting to the database. \n${err}`);
     })
 
 
