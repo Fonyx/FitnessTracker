@@ -1,11 +1,25 @@
 const mongoose = require('mongoose');
 const db = require('../models');
 
-mongoose.connect('mongodb://localhost/workout', {
+const dotenv = require('dotenv');
+dotenv.config();
+const PORT = process.env.PORT || 28017;
+const db_url = process.env.MONGODB_URL;
+const Logger = require("../libs/logger");
+
+const connectionParams={
   useNewUrlParser: true,
-  useFindAndModify: false,
-  useUnifiedTopology: true,
-});
+  useCreateIndex: true,
+  useUnifiedTopology: true 
+}
+
+mongoose.connect(db_url, connectionParams)
+    .then(() => {
+        console.log('Connected to database ');
+    })
+    .catch((err) => {
+        Logger.error(`Error connecting to the database. \n${err}`);
+    })
 
 const workoutSeed = [
   {

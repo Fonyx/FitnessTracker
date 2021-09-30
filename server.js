@@ -2,7 +2,6 @@ const dotenv = require('dotenv');
 dotenv.config();
 const path = require('path');
 const express = require('express');
-const compression = require('compression');
 const controllers = require('./controllers');
 const Logger = require("./libs/logger");
 const configuredMorgan = require("./config/morgan");
@@ -14,12 +13,10 @@ const app = express();
 const PORT = process.env.PORT || 28017;
 const db_url = process.env.MONGODB_URL;
 
-
 // setup handlebars
 app.engine('hbs', hbs({layoutsDir: __dirname + '/views/layouts', extname: 'hbs'}));
 app.set('view engine', 'hbs');
 
-app.use(compression());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(express.static(path.join(__dirname, 'public')));
@@ -35,6 +32,7 @@ const connectionParams={
     useCreateIndex: true,
     useUnifiedTopology: true 
 }
+
 mongoose.connect(db_url, connectionParams)
     .then( () => {
         console.log('Connected to database ');
