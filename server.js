@@ -22,7 +22,7 @@ app.set('view engine', 'hbs');
 app.use(compression());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-app.use(express.static(path.join(__dirname, 'app/public')));
+app.use(express.static(path.join(__dirname, 'public')));
 
 // must tell app to use morgan middleware before importing the controllers
 app.use(configuredMorgan);
