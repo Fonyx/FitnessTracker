@@ -11,6 +11,7 @@ const mongoose = require('mongoose');
 
 const app = express();
 const PORT = process.env.PORT || 27017;
+const db_url = process.env.MONGODB_URL
 
 
 app.use(compression());
@@ -29,7 +30,7 @@ const connectionParams={
     useCreateIndex: true,
     useUnifiedTopology: true 
 }
-mongoose.connect(process.env.MONGO_DB_URL, connectionParams)
+mongoose.connect(db_url, connectionParams)
     .then( () => {
         console.log('Connected to database ');
         app.listen(PORT, () => {
