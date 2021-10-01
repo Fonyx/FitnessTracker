@@ -34,14 +34,14 @@ const connectionParams={
 }
 
 mongoose.connect(db_url, connectionParams)
-    .then( () => {
-        Logger.info(`Connected to database @ http://localhost:${PORT}`);
-        app.listen(PORT, () => {
-          Logger.info('Server is running http://localhost:'+PORT);
-        });
-    })
-    .catch( (err) => {
-        Logger.error(`Error connecting to the database. \n${err}`);
-    })
+.then(() => {
+    Logger.info(`Connected to database @ FirstTracker.uvvp5.mongodb.net`);
+    app.listen(PORT, () => {
+        Logger.info('Server is running http://localhost:'+PORT);
+    });
+})
+.catch( (err) => {
+    Logger.error(`Error connecting to the database. \n${err}`);
+})
 
 

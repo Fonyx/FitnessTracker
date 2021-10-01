@@ -1,0 +1,5 @@
+api routes
+PUT - /api/workouts.:id         -> addExercise to a workout
+POST - /api/workouts            -> createWorkout
+GET - /api/workouts             -> getLastWorkout
+GET - /api/workouts/range       -> getWorkoutsInRange
