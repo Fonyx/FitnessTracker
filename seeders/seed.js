@@ -132,15 +132,23 @@ async function seed(){
   
   Logger.info(`Inserted ${exercises.result.n} exercise entries`);
 
+  exerciseIdList = exercises.ops.map((exercise) => exercise._id)
 
-  let workouts = exercises.ops.map((exercise) => {
-    db.Workout.collection.insertOne({
-      day: new Date(new Date().setDate(new Date().getDate() - 9)),
-      exercises: [exercise._id]
-    });
+  // workout 1 with all exercises
+  let workout1 = db.Workout.collection.insertOne({
+    day: new Date(new Date().setDate(new Date().getDate() - 9)),
+    exercises: exerciseIdList 
   });
+  Logger.info(`Inserted workout 1`);
+  
+  // workout 2 with all exercises
+  let workout2 = db.Workout.collection.insertOne({
+    day: new Date(new Date().setDate(new Date().getDate() - 3)),
+    exercises: exerciseIdList 
+  });
+  Logger.info(`Inserted workout 2`);
+
     
-  Logger.info(`Inserted ${workouts.length} workout entries`);
   // checking the data works
   db.Workout.find().populate("exercises").then((dbWorkouts) => {
     for(let workout of dbWorkouts){
