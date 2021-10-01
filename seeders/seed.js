@@ -142,7 +142,7 @@ async function seed(){
     
   Logger.info(`Inserted ${workouts.length} workout entries`);
   // checking the data works
-  db.Workout.find({}).populate("exercise").then((dbWorkouts) => {
+  db.Workout.find().populate("exercises").then((dbWorkouts) => {
     for(let workout of dbWorkouts){
       console.log(workout)
       for(let exercise of workout.exercises){
