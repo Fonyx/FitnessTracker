@@ -35,7 +35,7 @@ const connectionParams={
 
 mongoose.connect(db_url, connectionParams)
     .then( () => {
-        console.log('Connected to database ');
+        Logger.info(`Connected to database @ http://localhost:${PORT}`);
         app.listen(PORT, () => {
           Logger.info('Server is running http://localhost:'+PORT);
         });
