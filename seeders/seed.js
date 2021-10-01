@@ -3,7 +3,6 @@ const db = require('../models');
 
 const dotenv = require('dotenv');
 dotenv.config();
-const PORT = process.env.PORT || 28017;
 const db_url = process.env.MONGODB_URL;
 const Logger = require("../libs/logger");
 
