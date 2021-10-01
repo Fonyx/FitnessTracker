@@ -123,24 +123,33 @@ const exerciseSeeds = [
   },
 ]
 
-db.Exercise.deleteMany().then(
-  db.Workout.deleteMany().then(()=>{
-    db.Exercise.collection.insertMany(exerciseSeeds).then((data)=>{
-      Logger.info(`Inserted ${data.result.n} exercise entries`);
-      for(let exercise of data.ops){
-        db.Workout.collection.insertOne({
-          day: new Date(new Date().setDate(new Date().getDate() - 9)),
-          exercises: [exercise._id]
-        }).then((data) => {
-          Logger.info(`Inserted ${data.result.n} workout entries`);
-          // checking the data works
-          db.Workout.find({}).populate("exercise").then((dbWorkouts) => {
-            console.log(dbWorkouts)
-          })
-        });
-      }
+async function seed(){
+  await db.Exercise.deleteMany();
+
+  await db.Workout.deleteMany();
+    
+  let exercises = await db.Exercise.collection.insertMany(exerciseSeeds);
+  
+  Logger.info(`Inserted ${exercises.result.n} exercise entries`);
+
+
+  let workouts = exercises.ops.map((exercise) => {
+    db.Workout.collection.insertOne({
+      day: new Date(new Date().setDate(new Date().getDate() - 9)),
+      exercises: [exercise._id]
     });
-  })
-)
+  });
+    
+  Logger.info(`Inserted ${workouts.length} workout entries`);
+  // checking the data works
+  db.Workout.find({}).populate("exercise").then((dbWorkouts) => {
+    for(let workout of dbWorkouts){
+      console.log(workout)
+      for(let exercise of workout.exercises){
+        console.log(exercise)
+      }
+    }
+  });
+}
 
-
+seed()
