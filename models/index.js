@@ -1,9 +1,6 @@
 const Workout = require('./workout');
-const Exercise = require('./exercise');
 
 const Models = {
-    Workout,
-    Exercise
-}
+    Workout}
 
 module.exports = Models

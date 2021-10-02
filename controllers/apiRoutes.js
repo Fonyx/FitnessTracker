@@ -8,25 +8,17 @@ router.get("/workouts", [], async(req, res) =>{
     try{
 
         
-        let test = await db.Workout.aggregate([
-            {"$lookup":{
-                "from":"exercises",
-                "localField":"exercises",
-                "foreignField":"_id",
-                "as":"exercise"
-              }
-            },
-                {"$addFields": {
-                    "totalDuration": { "$sum": "$exercise.duration" }
+        let workouts = await db.Workout.aggregate([
+            {
+                $addFields: {
+                    totalDuration: {
+                        $sum: "$exercises.duration"
+                    }
                 }
             }
         ]);
-        
-        let workouts = await db.Workout.populate(test, {path: "workout"});
-        
-        // let workouts = await db.Workout.find().populate('exercises');
 
-        res.send(test);
+        res.send(workouts);
     }catch(err){
         res.status(500).json(err.message)
     }

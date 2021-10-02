@@ -20,114 +20,131 @@ mongoose.connect(db_url, connectionParams)
         Logger.error(`Error connecting to the database. \n${err}`);
     })
 
-const exerciseSeeds = [
+const workoutSeed = [
   {
-    type: 'resistance',
-    name: 'Bicep Curl',
-    duration: 20,
-    weight: 100,
-    reps: 10,
-    sets: 4,
-  },
-  {
-    type: 'resistance',
-    name: 'Lateral Pull',
-    duration: 20,
-    weight: 300,
-    reps: 10,
-    sets: 4,
-  },
-  {
-    type: 'resistance',
-    name: 'Push Press',
-    duration: 25,
-    weight: 185,
-    reps: 8,
-    sets: 4,
-  },
-  {
-    type: 'cardio',
-    name: 'Running',
-    duration: 25,
-    distance: 4,
-  },
-  {
-    type: 'resistance',
-    name: 'Bench Press',
-    duration: 20,
-    weight: 285,
-    reps: 10,
-    sets: 4,
-  },
-  {
-    type: 'resistance',
-    name: 'Bench Press',
-    duration: 20,
-    weight: 300,
-    reps: 10,
-    sets: 4,
-  },
-  {
-    type: 'resistance',
-    name: 'Quad Press',
-    duration: 30,
-    weight: 300,
-    reps: 10,
-    sets: 4,
-  },
-  {
-    type: 'resistance',
-    name: 'Bench Press',
-    duration: 20,
-    weight: 300,
-    reps: 10,
-    sets: 4,
-  },
-  {
-    type: 'resistance',
-    name: 'Military Press',
-    duration: 20,
-    weight: 300,
-    reps: 10,
-    sets: 4,
-  },
-]
-
-async function seed(){
-  await db.Exercise.deleteMany();
-
-  await db.Workout.deleteMany();
-    
-  let exercises = await db.Exercise.collection.insertMany(exerciseSeeds);
-  
-  Logger.info(`Inserted ${exercises.result.n} exercise entries`);
-
-  exerciseIdList = exercises.ops.map((exercise) => exercise._id)
-
-  // workout 1 with all exercises
-  let workout1 = db.Workout.collection.insertOne({
     day: new Date(new Date().setDate(new Date().getDate() - 9)),
-    exercises: exerciseIdList 
-  });
-  Logger.info(`Inserted workout 1`);
-  
-  // workout 2 with all exercises
-  let workout2 = db.Workout.collection.insertOne({
+    exercises: [
+      {
+        type: 'resistance',
+        name: 'Bicep Curl',
+        duration: 20,
+        weight: 100,
+        reps: 10,
+        sets: 4,
+      },
+    ],
+  },
+  {
+    day: new Date(new Date().setDate(new Date().getDate() - 8)),
+    exercises: [
+      {
+        type: 'resistance',
+        name: 'Lateral Pull',
+        duration: 20,
+        weight: 300,
+        reps: 10,
+        sets: 4,
+      },
+    ],
+  },
+  {
+    day: new Date(new Date().setDate(new Date().getDate() - 7)),
+    exercises: [
+      {
+        type: 'resistance',
+        name: 'Push Press',
+        duration: 25,
+        weight: 185,
+        reps: 8,
+        sets: 4,
+      },
+    ],
+  },
+  {
+    day: new Date(new Date().setDate(new Date().getDate() - 6)),
+    exercises: [
+      {
+        type: 'cardio',
+        name: 'Running',
+        duration: 25,
+        distance: 4,
+      },
+    ],
+  },
+  {
+    day: new Date(new Date().setDate(new Date().getDate() - 5)),
+    exercises: [
+      {
+        type: 'resistance',
+        name: 'Bench Press',
+        duration: 20,
+        weight: 285,
+        reps: 10,
+        sets: 4,
+      },
+    ],
+  },
+  {
+    day: new Date(new Date().setDate(new Date().getDate() - 4)),
+    exercises: [
+      {
+        type: 'resistance',
+        name: 'Bench Press',
+        duration: 20,
+        weight: 300,
+        reps: 10,
+        sets: 4,
+      },
+    ],
+  },
+  {
     day: new Date(new Date().setDate(new Date().getDate() - 3)),
-    exercises: exerciseIdList 
-  });
-  Logger.info(`Inserted workout 2`);
+    exercises: [
+      {
+        type: 'resistance',
+        name: 'Quad Press',
+        duration: 30,
+        weight: 300,
+        reps: 10,
+        sets: 4,
+      },
+    ],
+  },
+  {
+    day: new Date(new Date().setDate(new Date().getDate() - 2)),
+    exercises: [
+      {
+        type: 'resistance',
+        name: 'Bench Press',
+        duration: 20,
+        weight: 300,
+        reps: 10,
+        sets: 4,
+      },
+    ],
+  },
+  {
+    day: new Date(new Date().setDate(new Date().getDate() - 1)),
+    exercises: [
+      {
+        type: 'resistance',
+        name: 'Military Press',
+        duration: 20,
+        weight: 300,
+        reps: 10,
+        sets: 4,
+      },
+    ],
+  },
+];
 
-    
-  // checking the data works
-  db.Workout.find().populate("exercises").then((dbWorkouts) => {
-    for(let workout of dbWorkouts){
-      console.log(workout)
-      for(let exercise of workout.exercises){
-        console.log(exercise)
-      }
-    }
+db.Workout.deleteMany({})
+  .then(() => db.Workout.collection.insertMany(workoutSeed))
+  .then((data) => {
+    Logger.info(data.result.n + ' records inserted!');
+    process.exit(0);
+  })
+  .catch((err) => {
+    Logger.error(err);
+    process.exit(1);
   });
-}
-
-seed()
