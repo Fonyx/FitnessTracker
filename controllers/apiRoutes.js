@@ -30,7 +30,16 @@ router.get("/workouts", [], async(req, res) =>{
  */
 router.get("/workouts/range", [], async(req, res) => {
     try{
-        let workouts = await db.Workout.find({}).populate('exercises');
+        let workouts = await db.Workout.aggregate([
+            {
+                $addFields: {
+                    totalDuration: {
+                        $sum: "$exercises.duration"
+                    }
+                }
+            }
+        ]);
+
         res.send(workouts);
     }catch(err){
         res.status(500).json(err.message)
@@ -43,14 +52,15 @@ router.get("/workouts/range", [], async(req, res) => {
  */
 router.put("/workouts/:id", [], async(req, res) =>{
     try{
-        // create a new exercise
-        let exercise = await db.Exercise.create({...req.body});
+        
         // update the new workout list to contain the _id of the new exercise
         let workout = await db.Workout.findOneAndUpdate(
         {
             _id: req.params.id
         }, {
-            $push: { exercises: exercise._id}
+            $push: { exercises: {
+                ...req.body, _id:undefined
+            }}
         }, {
             new: true
         });
@@ -66,10 +76,11 @@ router.put("/workouts/:id", [], async(req, res) =>{
  */
 router.post("/workouts", [], async(req, res) =>{
     try{
-        let workout = new db.Workout({
-            day: new Date()
+        // create a new workout
+        let workout =await db.Workout.create({
+            day: new Date(),
+            exercises: []
         });
-        await workout.save();
         res.send(workout);
     }catch(err){
         res.status(500).json(err.message)
