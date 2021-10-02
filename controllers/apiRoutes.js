@@ -6,8 +6,27 @@ const db = require('../models');
  */
 router.get("/workouts", [], async(req, res) =>{
     try{
-        let workouts = await db.Workout.find({}).populate('Exercises');
-        res.send(workouts);
+
+        
+        let test = await db.Workout.aggregate([
+            {"$lookup":{
+                "from":"exercises",
+                "localField":"exercises",
+                "foreignField":"_id",
+                "as":"exercise"
+              }
+            },
+                {"$addFields": {
+                    "totalDuration": { "$sum": "$exercise.duration" }
+                }
+            }
+        ]);
+        
+        let workouts = await db.Workout.populate(test, {path: "workout"});
+        
+        // let workouts = await db.Workout.find().populate('exercises');
+
+        res.send(test);
     }catch(err){
         res.status(500).json(err.message)
     }
@@ -15,11 +34,11 @@ router.get("/workouts", [], async(req, res) =>{
 
 
 /**
- * Get workouts in range
+ * Get workout range for runs
  */
-router.get("/workouts/range", [], async(req, res) =>{
+router.get("/workouts/range", [], async(req, res) => {
     try{
-        let workouts = await db.Workout.find({}).populate('Exercises');
+        let workouts = await db.Workout.find({}).populate('exercises');
         res.send(workouts);
     }catch(err){
         res.status(500).json(err.message)
@@ -32,8 +51,16 @@ router.get("/workouts/range", [], async(req, res) =>{
  */
 router.put("/workouts/:id", [], async(req, res) =>{
     try{
-        let workout = await db.Workout.find({
+        // create a new exercise
+        let exercise = await db.Exercise.create({...req.body});
+        // update the new workout list to contain the _id of the new exercise
+        let workout = await db.Workout.findOneAndUpdate(
+        {
             _id: req.params.id
+        }, {
+            $push: { exercises: exercise._id}
+        }, {
+            new: true
         });
         res.send(workout);
     }catch(err){
@@ -47,7 +74,9 @@ router.put("/workouts/:id", [], async(req, res) =>{
  */
 router.post("/workouts", [], async(req, res) =>{
     try{
-        let workout = new db.Workout();
+        let workout = new db.Workout({
+            day: new Date()
+        });
         await workout.save();
         res.send(workout);
     }catch(err){

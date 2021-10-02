@@ -17,7 +17,7 @@ function calculateTotalWeight(data) {
 
 function populateChart(data) {
   const durations = data.map(({ totalDuration }) => totalDuration);
-  const pounds = calculateTotalWeight(data);
+  const kgs = calculateTotalWeight(data);
 
   const line = document.querySelector('#canvas').getContext('2d');
   const bar = document.querySelector('#canvas2').getContext('2d');
@@ -67,8 +67,8 @@ function populateChart(data) {
       labels,
       datasets: [
         {
-          label: 'Pounds',
-          data: pounds,
+          label: 'Kilograms',
+          data: kgs,
           backgroundColor: [
             'rgba(255, 99, 132, 0.2)',
             'rgba(54, 162, 235, 0.2)',
