@@ -53,16 +53,15 @@ router.get("/workouts/range", [], async(req, res) => {
 router.put("/workouts/:id", [], async(req, res) =>{
     try{
         
-        // update the new workout list to contain the _id of the new exercise
         let workout = await db.Workout.findOneAndUpdate(
         {
             _id: req.params.id
         }, {
             $push: { exercises: {
-                ...req.body, _id:undefined
+                ...req.body
             }}
         }, {
-            new: true
+            new: true,
         });
         res.send(workout);
     }catch(err){
