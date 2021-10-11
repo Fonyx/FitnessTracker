@@ -4,7 +4,7 @@ const db = require('../models');
 const dotenv = require('dotenv');
 dotenv.config();
 const db_url = process.env.MONGODB_URL;
-const Logger = require("../libs/logger");
+// const Logger = require("../libs/logger");
 
 const connectionParams={
   useNewUrlParser: true,
@@ -14,10 +14,10 @@ const connectionParams={
 
 mongoose.connect(db_url, connectionParams)
     .then(() => {
-        Logger.info(`Connected to database @ FirstTracker.uvvp5.mongodb.net`);
+        console.log(`Connected to database @ FirstTracker.uvvp5.mongodb.net`);
     })
     .catch((err) => {
-        Logger.error(`Error connecting to the database. \n${err}`);
+        console.log(`Error connecting to the database. \n${err}`);
     })
 
 const workoutSeed = [
@@ -141,10 +141,10 @@ const workoutSeed = [
 db.Workout.deleteMany({})
   .then(() => db.Workout.collection.insertMany(workoutSeed))
   .then((data) => {
-    Logger.info(data.result.n + ' records inserted!');
+    console.log(data.result.n + ' records inserted!');
     process.exit(0);
   })
   .catch((err) => {
-    Logger.error(err);
+    console.log(err);
     process.exit(1);
   });

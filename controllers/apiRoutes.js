@@ -57,9 +57,11 @@ router.put("/workouts/:id", [], async(req, res) =>{
         {
             _id: req.params.id
         }, {
-            $push: { exercises: {
-                ...req.body
-            }}
+            $push: { 
+                exercises: {
+                    ...req.body
+                }
+            }
         }, {
             new: true,
         });
